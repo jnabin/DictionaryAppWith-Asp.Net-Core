@@ -1,0 +1,174 @@
+﻿@model IEnumerable<DictionaryApp.Models.Word>
+
+@{
+    ViewData["Title"] = "Word";
+    string noun = "";
+    string pro_noun = "";
+}
+
+<h3>Search Word</h3>
+<form id="searchWord">
+    <div class="input-group">
+        <div class="form-outline">
+            <input type="search" id="wordName" class="form-control" name="wordName"/>
+        </div>
+        <button onclick="showDetails()" type="button" class="btn btn-primary ml-1" data-toggle="modal" data-target="#wordDetailsModal">
+            <i class="fas fa-search"></i>
+        </button>
+    </div>
+</form>
+<hr />
+<h4>Word List</h4>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                word
+            </th>
+            <th>
+                noun
+            </th>
+
+            <th>
+                pro-noun
+            </th>
+
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            noun = "";
+            pro_noun = "";
+            string newNoun = "";
+            string newProNoun = "";
+            if (item.nouns != null && item.nouns.Count() > 0)
+            {
+                foreach (var nounItem in item.nouns)
+                {
+                    noun += nounItem.text + ", ";
+                }
+                newNoun = noun.Substring(0, noun.Length - 2);
+            }
+            if (item.proNouns != null && item.proNouns.Count() > 0)
+            {
+                foreach (var proNounItem in item.proNouns)
+                {
+                    pro_noun += proNounItem.text + ", ";
+                }
+                newProNoun = pro_noun.Substring(0, pro_noun.Length -2);
+            }
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.text)
+                </td>
+                <td>
+                    @newNoun
+                </td>
+                <td>
+                    @newProNoun
+                </td>
+
+                <td>
+
+                    <a asp-action="Edit" asp-route-id="@item.WordId">Edit</a> |
+
+                    <a asp-action="Details" asp-route-id="@item.WordId">Details</a> |
+
+                    <a asp-action="Delete" asp-route-id="@item.WordId">Delete</a>
+
+                </td>
+
+            </tr>
+        }
+    </tbody>
+</table>
+
+
+<div id="wordDetailsModal" class="modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                
+            </div>
+            <div class="modal-footer">
+                
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function showDetails() {
+        var formData = new FormData();
+        formData.append("value", $("#wordName").val());
+        var value = $("#wordName").val();
+        
+        $.ajax({
+            type: "POST",
+
+            url: '/Home/getWordDetails',
+            data: formData,
+            processData: false,
+            contentType: false
+        }).done(function (response) {
+                  
+                $(".modal-body").empty();
+                $('.modal-title').text("Word : " + value);
+                if (response == "not found") {
+                    $(".modal-body").append(`<p class="text-danger">Word not found</p>`)
+
+                } else {
+
+                    var nouns = response.nouns;
+                    var proNouns = response.pronouns;
+                    var sentence = response.sentencesa;
+
+                    $(".modal-body").append(`<div class="bg-secondary text-light text-center">Noun</div>`);
+                   
+                    if (nouns.length == 0) {
+                        $(".modal-body").append(`<p class="m-2 text-danger">Noun not available</p>`);
+                    } else {
+                        $.each(nouns, function (index, value) {
+                            $(".modal-body").append(`<ul class="m-2">`);
+                            $(".modal-body").append(`<li class="text-secondary">${value}</li>`);
+                            $(".modal-body").append(`</ul>`);
+                        })
+                    }
+                    $(".modal-body").append(`<div class="bg-secondary text-light text-center">Pro-Noun</div>`);
+                    if (proNouns.length == 0) {
+                        $(".modal-body").append(`<p class="m-2 text-danger">Pro-Noun not available</p>`);
+                    } else {
+                        $(".modal-body").append(`<ul class="m-2">`);
+                        $.each(proNouns, function (index, value) {
+                            $(".modal-body").append(`<li class="text-secondary">${value}</li>`);
+                        })
+                        $(".modal-body").append(`</ul>`);
+                    }
+                    $(".modal-body").append(`<div class="bg-secondary text-light text-center">Sentence</div>`);
+                    if (sentence.length == 0) {
+                        $(".modal-body").append(`<p class="m-2 text-danger">Sentence not available</p>`);
+                    } else {
+                        $(".modal-body").append(`<ul class="m-2">`);
+                        $.each(sentence, function (index, value) {
+
+                            $(".modal-body").append(`<li class="text-secondary">${value}</li>`);
+                        })
+                        $(".modal-body").append(`</ul>`);
+                    }
+
+                }
+            
+        });
+            
+        
+    }
+</script>

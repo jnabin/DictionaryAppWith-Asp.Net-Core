@@ -1,0 +1,145 @@
+﻿
+@{
+    ViewData["Title"] = "ManageWord";
+    List<Word> words = ViewBag.words;
+}
+
+
+<h1>Manage Word</h1>
+<hr />
+<div class="container">
+    <form>
+        <div class="container">
+            <div class="row">
+                <div class="col-4">
+                    <div class="form-group">
+                        <label for="wordOptions">Select Word</label>
+                        <select class="form-control" id="wordOptions" name="word">
+                            @foreach (var item in words)
+                            {
+                                <option value="@item.WordId">@item.text</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+       
+    </form>
+    <div class="container">
+        <div class="row">
+            <div class="col-5 border border-secondary p-2 m-2 mr-5">
+                <h4 class="text-secondary text-center mb-1">Noun</h4>
+                <form asp-action="AddNoun">
+                    <input type="hidden" value="" class="hiddeWord" name="hiddeWord"/>
+
+                    <div class="form-group">
+                        <label for="noun1">First Noun</label>
+                        <input class="form-control" type="text" id="noun1" name="Noun1">
+                    </div>
+                    <div class="form-group">
+                        <label for="noun2">Second Noun</label>
+                        <input class="form-control" type="text" id="noun2" name="Noun2">
+                    </div>
+                    <div class="form-group">
+                        <label for="noun3">Third Noun</label>
+                        <input class="form-control" type="text" id="noun3" name="Noun3">
+                    </div>
+                    <div class="form-group">
+                        <label for="noun4">Fourth Noun</label>
+                        <input class="form-control" type="text" id="noun4" name="Noun4">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+
+                </form>
+            </div>
+            <div class="col-5 border border-secondary p-2 m-2">
+                <h4 class="text-secondary text-center mb-1">Pro-Noun</h4>
+                <form asp-action="AddProNoun">
+                    <input type="hidden" value="" class="hiddeWord" name="hiddeWord"/>
+
+                    <div class="form-group">
+                        <label for="pronoun1">First Pro-Noun</label>
+                        <input class="form-control" type="text" id="pronoun1" name="ProNoun1">
+                    </div>
+                    <div class="form-group">
+                        <label for="pronoun2">Second Pro-Noun</label>
+                        <input class="form-control" type="text" id="pronoun2" name="ProNoun2">
+                    </div>
+                    <div class="form-group">
+                        <label for="pronoun3">Third Pro-Noun</label>
+                        <input class="form-control" type="text" id="pronoun3" name="ProNoun3">
+                    </div>
+                    <div class="form-group">
+                        <label for="pronoun4">Fourth Pro-Noun</label>
+                        <input class="form-control" type="text" id="pronoun4" name="ProNoun4">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+
+                </form>
+            </div>
+            <div class="col-5 border border-secondary p-2 m-2 mr-5">
+                <h4 class="text-secondary text-center mb-1">English Sentence</h4>
+                <form asp-action="AddESentence">
+                    <input type="hidden"  value="" class="hiddeWord" name="hiddeWord"/>
+
+                    <div class="form-group">
+                        <label for="esentence1">First E-Semntence</label>
+                        <input class="form-control" type="text" id="esentence1" name="ESentence1">
+                    </div>
+                    <div class="form-group">
+                        <label for="esentence2">Second E-Sentence</label>
+                        <input class="form-control" type="text" id="esentence2" name="ESentence2">
+                    </div>
+                    <div class="form-group">
+                        <label for="esentence3">Third E-Sentence</label>
+                        <input class="form-control" type="text" id="esentence3" name="ESentence3">
+                    </div>
+                    <div class="form-group">
+                        <label for="esentence4">Fourth E-Sentence</label>
+                        <input class="form-control" type="text" id="esentence4" name="ESentence4">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+
+                </form>
+            </div>
+            <div class="col-5 border border-secondary p-2 m-2">
+                <h4 class="text-secondary text-center mb-1">Bangla Sentence</h4>
+                <form asp-action="AddBSentence">
+                    <input type="hidden" value="" class="hiddeWord" />
+
+                    <div class="form-group">
+                        <label for="bsentence1">First B-Sentence</label>
+                        <input class="form-control" type="text" id="bsentence1" name="firstBSentence">
+                    </div>
+                    <div class="form-group">
+                        <label for="bsentence2">Second B-Sentence</label>
+                        <input class="form-control" type="text" id="bsentence2" name="secondBSentence">
+                    </div>
+                    <div class="form-group">
+                        <label for="bsentence3">Third B-Sentence</label>
+                        <input class="form-control" type="text" id="bsentence3" name="thirdBSentence">
+                    </div>
+                    <div class="form-group">
+                        <label for="bsentence4">Fourth B-Sentence</label>
+                        <input class="form-control" type="text" id="bsentence4" name="fourthBSentence">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        
+        $(".hiddeWord").val($("#wordOptions").val());
+        $("#wordOptions").change(function () {
+            $(".hiddeWord").val($("#wordOptions").val());
+        });
+
+    });
+    
+</script>
+
