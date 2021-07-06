@@ -10,7 +10,7 @@
     <div class="input-group">
         <div class="form-outline">
             <input type="search" id="wordName" class="form-control border-left-0 border-right-0 border-top-0" name="wordName" placeholder="search word" />
-            <div id="livesearch" class="container text-light mt-1"></div>
+            <div id="livesearch" class="container text-light"></div>
         </div>
         <button onclick="showDetails()" type="button" class="btn btn-primary ml-1" data-toggle="modal" data-target="#wordDetailsModal">
             <i class="fas fa-search"></i>
@@ -131,7 +131,7 @@
             processData: false,
             contentType: false
         }).done(function (response) {
-                  
+            $("#wordName").val("");
             $(".modal-body").empty();
             $(".removeDel").remove();
                 $('.modal-title').text("Word : " + value);
@@ -212,11 +212,12 @@
             if (wordList.length == 0) {
                 $("#livesearch").empty();
             }
-            $.each(wordList, function (index, value) {
-                $("#livesearch").append(`<p onclick="enterIntoSearchBox(this)" class="p-1 serchSuggetion">${value}</p>`);
-                $("#livesearch").css("border", "1px solid #A5ACB2");
-
-            });
+            else {
+                $.each(wordList, function (index, value) {
+                    $("#livesearch").append(`<p class="text-light serchSuggetion" onclick="enterIntoSearchBox(this)">${value}</p>`);
+                });
+            }
+           
 
         });
     });
