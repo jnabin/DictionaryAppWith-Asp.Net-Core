@@ -19,7 +19,7 @@
 </form>
 <hr />
 <div class="container word-table">
-    <h4 class="text-secondary">Word List (Total Words - @Model.Count())</h4>
+    <h4 class="text-secondary">Word List (Total Words - <span class="totalWord">@Model.Count()</span>)</h4>
     <table class="table">
         <thead>
             <tr>
@@ -233,7 +233,12 @@
             contentType: false
         }).done(function (response) {
             if (response == "success") {
-                alert("word deleted");
+                var count = $(".totalWord").html();
+              
+                var updateCount = parseInt(count) - 1;
+               
+                $(".totalWord").html(updateCount);
+               
             }
             
         });

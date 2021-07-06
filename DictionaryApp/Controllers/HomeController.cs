@@ -214,7 +214,7 @@ namespace DictionaryApp.Controllers
             List<string> wordList = new List<string>();
             foreach(var item in dictContext.Set<Word>().ToList())
             {
-                if (item.text.Contains(value))
+                if (item.text.StartsWith(value))
                 {
                     wordList.Add(item.text);
                 }
