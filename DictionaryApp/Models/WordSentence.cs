@@ -10,9 +10,9 @@ namespace DictionaryApp.Models
         public int WordSentenceId { get; set; }
 
         public int WordId { get; set; }
-        public Word Word { get; set; }
+        public virtual Word Word { get; set; }
         public int SentenceId { get; set; }
-        public Sentence Sentence { get; set; }
+        public virtual Sentence Sentence { get; set; }
 
 
     }

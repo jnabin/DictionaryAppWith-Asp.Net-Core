@@ -17,5 +17,7 @@ namespace DictionaryApp.Models
 
         protected override void OnConfiguring(DbContextOptionsBuilder options)
             => options.UseSqlite(@"Data Source=D:\AspCore\dictionary.sqlite");
+
+
     }
 }

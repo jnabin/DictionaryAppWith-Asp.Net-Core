@@ -48,7 +48,8 @@ namespace DictionaryApp.Controllers
                         {
                             words.Add(new Word
                             {
-                                text = word
+                                text = word,
+                                Mark = true
                             });
                             counter++;
                         }
@@ -87,13 +88,16 @@ namespace DictionaryApp.Controllers
             dictContext.SaveChanges();
             for (int i=1; i<5; i++)
             {
-                string nounText = Request.Form["Noun" + i];
-                if(nounText != "")
+                string nounId = Request.Form["Noun" + i];
+                if(nounId != null)
                 {
                     Noun noun = new Noun();
                     noun.WordId = wordid;
                     noun.word = dictContext.Set<Word>().Find(wordid);
-                    noun.text = nounText;
+
+                    noun.NounMappingWordId = Convert.ToInt32(nounId);
+                    noun.NounMappingWord = dictContext.Set<Word>().Find(Convert.ToInt32(nounId));
+
                     dictContext.Nouns.Add(noun);
                     dictContext.SaveChanges();
                 }
@@ -110,13 +114,16 @@ namespace DictionaryApp.Controllers
             dictContext.SaveChanges();
             for (int i = 1; i < 5; i++)
             {
-                string proNounText = Request.Form["pronoun" + i];
-                if (proNounText != "")
+                string proNounId = Request.Form["pronoun" + i];
+                if (proNounId != null)
                 {
                     ProNoun pnoun = new ProNoun();
                     pnoun.WordId = wordid;
                     pnoun.word = dictContext.Set<Word>().Find(wordid);
-                    pnoun.text = proNounText;
+
+                    pnoun.ProNounMappingWordId = Convert.ToInt32(proNounId);
+                    pnoun.ProNounMappingWord = dictContext.Set<Word>().Find(Convert.ToInt32(proNounId));
+
                     dictContext.ProNouns.Add(pnoun);
                     dictContext.SaveChanges();
                 }
@@ -174,11 +181,11 @@ namespace DictionaryApp.Controllers
 
             foreach(var item in dictContext.Set<Noun>().Where(x => x.WordId == wordId))
             {
-                wordViewModel.nouns.Add(item.text);
+                wordViewModel.nouns.Add(dictContext.Set<Word>().Find(item.NounMappingWordId).text);
             }
             foreach (var item in dictContext.Set<ProNoun>().Where(x => x.WordId == wordId))
             {
-                wordViewModel.proNouns.Add(item.text);
+                wordViewModel.proNouns.Add(dictContext.Set<Word>().Find(item.ProNounMappingWordId).text);
             }
 
             List<Sentence> sentences1 = new List<Sentence>();
@@ -189,9 +196,43 @@ namespace DictionaryApp.Controllers
                     wordViewModel.sentences.Add(item.SentenceText);
                 }
             }
-            return Json(new { nouns = wordViewModel.nouns, sentencesa = wordViewModel.sentences, pronouns = wordViewModel.proNouns });
+            return Json(new { wordId = wordId, nouns = wordViewModel.nouns, sentencesa = wordViewModel.sentences, pronouns = wordViewModel.proNouns });
            
 
+        }
+
+        public IActionResult DeleteWord(string value)
+        {
+            dictContext.Set<Word>().Remove(dictContext.Set<Word>().Find(Convert.ToInt32(value)));
+            dictContext.SaveChanges();
+            return Json("success");
+        }
+
+        [HttpPost]
+        public JsonResult SearchWord(string value)
+        {
+            List<string> wordList = new List<string>();
+            foreach(var item in dictContext.Set<Word>().ToList())
+            {
+                if (item.text.Contains(value))
+                {
+                    wordList.Add(item.text);
+                }
+            }
+            return Json(new { wordList = wordList});
+        }
+
+        [HttpPost]
+        public IActionResult AddWord(Word word)
+        {
+            if(dictContext.Set<Word>().ToList().Where(x => x.text == word.text).Any())
+            {
+                return RedirectToAction("ManageWord");
+            }
+            word.Mark = false;
+            dictContext.Set<Word>().Add(word);
+            dictContext.SaveChanges();
+            return RedirectToAction("ManageWord");
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

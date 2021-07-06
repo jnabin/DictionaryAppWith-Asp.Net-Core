@@ -4,77 +4,163 @@
     List<Word> words = ViewBag.words;
 }
 
+<script src="http://code.jquery.com/jquery.js"></script>
+
+<!-- Latest compiled and minified JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+
 
 <h1>Manage Word</h1>
 <hr />
 <div class="container">
-    <form>
+    
         <div class="container">
             <div class="row">
                 <div class="col-4">
+                    <form>
+                        <div class="form-group">
+                            <label for="wordOptions">Select Word</label>
+                            <select class="form-control" id="wordOptions" name="word">
+                                @foreach (var item in words)
+                                {
+                                    <option value="@item.WordId">@item.text</option>
+                                }
+                            </select>
+                        </div>
+                    </form>
+                </div>
+                <div class="col-6 ml-3">
+                    <form asp-action="AddWord">
+                        
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-8">
+                                    <div class="form-group">
+
+                                        <input class="form-control border-bottom-secondary border-left-0 border-right-0 border-top-0" placeholder="add word" type="text" name="text" id="addWord" required/>
+
+                                    </div>
+                                </div>
+                                <div class="col-3">
+                                    <button type="submit" class="btn btn-primary">Add</button>
+                                </div>
+                            </div>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+
+   
+    <div class="container">
+        <div class="row">
+            <div class="col-5 border border-secondary p-2 m-2 mr-5">
+                <h4 class="text-secondary text-center mb-1">Noun</h4>
+                <form asp-action="AddNoun">
+                    <input type="hidden" value="" class="hiddeWord" name="hiddeWord" />
+
                     <div class="form-group">
-                        <label for="wordOptions">Select Word</label>
-                        <select class="form-control" id="wordOptions" name="word">
+                        <label for="nounOptions1">First Noun</label>
+                        <select class="form-control" id="nounOptions1" name="Noun1">
+                            <option disabled selected value=""> -- select a noun -- </option>
                             @foreach (var item in words)
                             {
                                 <option value="@item.WordId">@item.text</option>
                             }
                         </select>
                     </div>
-                </div>
-            </div>
-        </div>
-       
-    </form>
-    <div class="container">
-        <div class="row">
-            <div class="col-5 border border-secondary p-2 m-2 mr-5">
-                <h4 class="text-secondary text-center mb-1">Noun</h4>
-                <form asp-action="AddNoun">
-                    <input type="hidden" value="" class="hiddeWord" name="hiddeWord"/>
 
                     <div class="form-group">
-                        <label for="noun1">First Noun</label>
-                        <input class="form-control" type="text" id="noun1" name="Noun1">
+                        <label for="nounOptions2">Second Noun</label>
+                        <select class="form-control" id="nounOptions2" name="Noun2">
+                            <option disabled selected value=""> -- select a noun -- </option>
+                            @foreach (var item in words)
+                            {
+                                <option value="@item.WordId">@item.text</option>
+                            }
+                        </select>
                     </div>
+
                     <div class="form-group">
-                        <label for="noun2">Second Noun</label>
-                        <input class="form-control" type="text" id="noun2" name="Noun2">
+                        <label for="nounOptions3">Third Noun</label>
+
+                        <select class="form-control" id="nounOptions3" name="Noun3">
+                            <option disabled selected value=""> -- select a noun -- </option>
+                            @foreach (var item in words)
+                            {
+                                <option value="@item.WordId">@item.text</option>
+                            }
+                        </select>
                     </div>
+
                     <div class="form-group">
-                        <label for="noun3">Third Noun</label>
-                        <input class="form-control" type="text" id="noun3" name="Noun3">
+                        <label for="nounOptions4">Fourth Noun</label>
+                        <select class="form-control" id="nounOptions4" name="Noun4">
+                            <option disabled selected value=""> -- select a noun -- </option>
+                            @foreach (var item in words)
+                            {
+                                <option value="@item.WordId">@item.text</option>
+                            }
+                        </select>
                     </div>
-                    <div class="form-group">
-                        <label for="noun4">Fourth Noun</label>
-                        <input class="form-control" type="text" id="noun4" name="Noun4">
-                    </div>
-                    <button type="submit" class="btn btn-primary">Submit</button>
+
+
+                    <button type="submit" class="btn btn-primary loadPage">Submit</button>
 
                 </form>
             </div>
             <div class="col-5 border border-secondary p-2 m-2">
                 <h4 class="text-secondary text-center mb-1">Pro-Noun</h4>
                 <form asp-action="AddProNoun">
-                    <input type="hidden" value="" class="hiddeWord" name="hiddeWord"/>
+                    <input type="hidden" value="" class="hiddeWord" name="hiddeWord" />
+
 
                     <div class="form-group">
-                        <label for="pronoun1">First Pro-Noun</label>
-                        <input class="form-control" type="text" id="pronoun1" name="ProNoun1">
+                        <label for="pronoun1">First ProNoun</label>
+                        <select class="form-control" id="pronoun1" name="ProNoun1">
+                            <option disabled selected value=""> -- select a pro-noun -- </option>
+                            @foreach (var item in words)
+                            {
+                                <option value="@item.WordId">@item.text</option>
+                            }
+                        </select>
                     </div>
+
                     <div class="form-group">
-                        <label for="pronoun2">Second Pro-Noun</label>
-                        <input class="form-control" type="text" id="pronoun2" name="ProNoun2">
+                        <label for="pronoun2">Second ProNoun</label>
+                        <select class="form-control" id="pronoun2" name="ProNoun2">
+                            <option disabled selected value=""> -- select a pro-noun -- </option>
+                            @foreach (var item in words)
+                            {
+                                <option value="@item.WordId">@item.text</option>
+                            }
+                        </select>
                     </div>
+
                     <div class="form-group">
-                        <label for="pronoun3">Third Pro-Noun</label>
-                        <input class="form-control" type="text" id="pronoun3" name="ProNoun3">
+                        <label for="pronoun3">Third ProNoun</label>
+                        <select class="form-control" id="pronoun3" name="ProNoun3">
+                            <option disabled selected value=""> -- select a pro-noun -- </option>
+                            @foreach (var item in words)
+                            {
+                                <option value="@item.WordId">@item.text</option>
+                            }
+                        </select>
                     </div>
+
                     <div class="form-group">
-                        <label for="pronoun4">Fourth Pro-Noun</label>
-                        <input class="form-control" type="text" id="pronoun4" name="ProNoun4">
+                        <label for="pronoun4">Fourth ProNoun</label>
+                        <select class="form-control" id="pronoun4" name="ProNoun4">
+                            <option disabled selected value=""> -- select a pro-noun -- </option>
+                            @foreach (var item in words)
+                            {
+                                <option value="@item.WordId">@item.text</option>
+                            }
+                        </select>
                     </div>
-                    <button type="submit" class="btn btn-primary">Submit</button>
+
+                    <button type="submit" class="btn btn-primary loadPage">Submit</button>
 
                 </form>
             </div>
@@ -99,7 +185,7 @@
                         <label for="esentence4">Fourth E-Sentence</label>
                         <input class="form-control" type="text" id="esentence4" name="ESentence4">
                     </div>
-                    <button type="submit" class="btn btn-primary">Submit</button>
+                    <button type="submit" class="btn btn-primary loadPage">Submit</button>
 
                 </form>
             </div>
@@ -124,22 +210,32 @@
                         <label for="bsentence4">Fourth B-Sentence</label>
                         <input class="form-control" type="text" id="bsentence4" name="fourthBSentence">
                     </div>
-                    <button type="submit" class="btn btn-primary">Submit</button>
+                    <button type="submit" class="btn btn-primary loadPage">Submit</button>
 
                 </form>
             </div>
         </div>
     </div>
 </div>
+<div id="loader"></div>
 <script>
+   
     $(document).ready(function () {
-        
+
         $(".hiddeWord").val($("#wordOptions").val());
         $("#wordOptions").change(function () {
             $(".hiddeWord").val($("#wordOptions").val());
         });
 
     });
-    
+    var spinner = $('#loader');
+    $(function () {
+        $('.loadPage').click(function (e) {
+           
+            spinner.show();
+           
+        });
+    });
+
 </script>
 
