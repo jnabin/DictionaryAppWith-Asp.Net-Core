@@ -49,7 +49,8 @@ namespace DictionaryApp.Controllers
                             words.Add(new Word
                             {
                                 text = word,
-                                Mark = true
+                                Mark = true,
+                                IsPublished = true
                             });
                             counter++;
                         }
@@ -62,34 +63,101 @@ namespace DictionaryApp.Controllers
                 dictContext.SaveChanges();
             }
             List<Word> allWords = dictContext.Set<Word>().ToList();
-            foreach(var item in allWords)
+            List<BanglaWordMapping> banglaWordMappings = dictContext.Set<BanglaWordMapping>().ToList();
+            foreach(var item in banglaWordMappings)
+            {
+                item.banglaWord = dictContext.Set<BanglaWord>().Where(x => x.BanglaWordId == item.BanglaWordId).FirstOrDefault();
+            }
+            foreach (var item in allWords)
             {
                 item.nouns = dictContext.Set<Noun>().Where(x => x.WordId == item.WordId).ToList();
                 item.proNouns = dictContext.Set<ProNoun>().Where(x => x.WordId == item.WordId).ToList();
+                item.banglaWordMappings = banglaWordMappings.Where(x => x.WordId == item.WordId).ToList();    
             }
             
             return View(allWords.OrderBy(x=>x.text));
         }
+
         [HttpGet]
-        public IActionResult ManageWord()
+        [Route("ManageWord")]
+        public IActionResult ManageWord([FromQuery(Name = "word")] string wordText)
         {
+            Word word = new Word();
+            if(wordText != null)
+            {
+                word = dictContext.Set<Word>().Where(x => x.text == wordText).FirstOrDefault();
+                word.nouns = dictContext.Set<Noun>().Where(x => x.WordId == word.WordId).ToList();
+                word.proNouns = dictContext.Set<ProNoun>().Where(x => x.WordId == word.WordId).ToList();
+                word.wordSentences = dictContext.Set<WordSentence>().Where(x => x.WordId == word.WordId).ToList();
+                word.banglaWordMappings = dictContext.Set<BanglaWordMapping>().Where(x => x.WordId == word.WordId).ToList();
+                foreach (var item in word.wordSentences)
+                {
+                    item.Sentence = dictContext.Set<Sentence>().Find(item.SentenceId);
+                }
+                foreach (var item in word.banglaWordMappings)
+                {
+                    item.banglaWord = dictContext.Set<BanglaWord>().Find(item.BanglaWordId);
+                }
+                ViewBag.word = word;
+                
+            }
             
-            List<Word> words = dictContext.Set<Word>().ToList().OrderBy(x=>x.text).ToList();
+            List<Word> words = dictContext.Set<Word>().ToList().OrderBy(x => x.text).ToList();
+            foreach(var item in words)
+            {
+                item.nouns = dictContext.Set<Noun>().Where(x => x.WordId == item.WordId).ToList();
+                item.proNouns = dictContext.Set<ProNoun>().Where(x => x.WordId == item.WordId).ToList();
+                item.wordSentences = dictContext.Set<WordSentence>().Where(x => x.WordId == item.WordId).ToList();
+            }
             ViewBag.words = words;
-            
+            ViewBag.banglaWord = dictContext.Set<BanglaWord>().ToList();
             return View();
+        }
+
+        [HttpPost]
+        public IActionResult AddBaglaMapping()
+        {
+            int wordid = Convert.ToInt32(Request.Form["hiddeWord"]);
+
+            dictContext.Set<Word>().Find(wordid).IsPublished = false;
+            dictContext.SaveChanges();
+
+            dictContext.Set<BanglaWordMapping>().RemoveRange(dictContext.Set<BanglaWordMapping>().Where(x => x.WordId == wordid));
+            dictContext.SaveChanges();
+            for (int i = 1; i < 5; i++)
+            {
+                string banglaWordId = Request.Form["bangla" + i];
+                if (banglaWordId != "")
+                {
+                    BanglaWordMapping banglaWordMapping = new BanglaWordMapping();
+                    banglaWordMapping.WordId = wordid;
+                    banglaWordMapping.word = dictContext.Set<Word>().Find(wordid);
+
+                    banglaWordMapping.BanglaWordId = Convert.ToInt32(banglaWordId);
+                    banglaWordMapping.banglaWord = dictContext.Set<BanglaWord>().Find(Convert.ToInt32(banglaWordId));
+
+                    dictContext.BanglaWordMappings.Add(banglaWordMapping);
+                    dictContext.SaveChanges();
+                }
+
+            }
+            return RedirectToAction("Word");
         }
 
         [HttpPost]
         public IActionResult AddNoun()
         {
             int wordid =Convert.ToInt32(Request.Form["hiddeWord"]);
+
+            dictContext.Set<Word>().Find(wordid).IsPublished = false;
+            dictContext.SaveChanges();
+
             dictContext.Set<Noun>().RemoveRange(dictContext.Set<Noun>().Where(x => x.WordId == wordid));
             dictContext.SaveChanges();
             for (int i=1; i<5; i++)
             {
                 string nounId = Request.Form["Noun" + i];
-                if(nounId != null)
+                if(nounId != "")
                 {
                     Noun noun = new Noun();
                     noun.WordId = wordid;
@@ -110,12 +178,16 @@ namespace DictionaryApp.Controllers
         public IActionResult AddProNoun()
         {
             int wordid = Convert.ToInt32(Request.Form["hiddeWord"]);
+
+            dictContext.Set<Word>().Find(wordid).IsPublished = false;
+            dictContext.SaveChanges();
+
             dictContext.Set<ProNoun>().RemoveRange(dictContext.Set<ProNoun>().Where(x => x.WordId == wordid));
             dictContext.SaveChanges();
             for (int i = 1; i < 5; i++)
             {
                 string proNounId = Request.Form["pronoun" + i];
-                if (proNounId != null)
+                if (proNounId != "")
                 {
                     ProNoun pnoun = new ProNoun();
                     pnoun.WordId = wordid;
@@ -136,6 +208,10 @@ namespace DictionaryApp.Controllers
         public IActionResult AddESentence()
         {
             int wordid = Convert.ToInt32(Request.Form["hiddeWord"]);
+
+            dictContext.Set<Word>().Find(wordid).IsPublished = false;
+            dictContext.SaveChanges();
+
             dictContext.Set<WordSentence>().RemoveRange(dictContext.Set<WordSentence>().Where(x => x.WordId == wordid));
             dictContext.SaveChanges();
  
@@ -171,21 +247,27 @@ namespace DictionaryApp.Controllers
         [HttpPost]
         public JsonResult getWordDetails(string value)
         {
-            
+              
             if (dictContext.Set<Word>().Where(x => x.text == value).FirstOrDefault() == null)
             {
                 return Json("not found");
             }          
             WordViewModel wordViewModel = new WordViewModel();
             int wordId = dictContext.Set<Word>().Where(x => x.text == value).FirstOrDefault().WordId;
-
+            foreach(var item in dictContext.Set<BanglaWordMapping>().Where(x => x.WordId == wordId))
+            {
+                wordViewModel.translation.Add(dictContext.Set<BanglaWord>().Find(item.BanglaWordId).text);
+                wordViewModel.translationId.Add(item.BanglaWordId);
+            }
             foreach(var item in dictContext.Set<Noun>().Where(x => x.WordId == wordId))
             {
                 wordViewModel.nouns.Add(dictContext.Set<Word>().Find(item.NounMappingWordId).text);
+                wordViewModel.nounsId.Add(dictContext.Set<Word>().Find(item.NounMappingWordId).WordId);
             }
             foreach (var item in dictContext.Set<ProNoun>().Where(x => x.WordId == wordId))
             {
                 wordViewModel.proNouns.Add(dictContext.Set<Word>().Find(item.ProNounMappingWordId).text);
+                wordViewModel.proNounsId.Add(dictContext.Set<Word>().Find(item.ProNounMappingWordId).WordId);
             }
 
             List<Sentence> sentences1 = new List<Sentence>();
@@ -196,8 +278,37 @@ namespace DictionaryApp.Controllers
                     wordViewModel.sentences.Add(item.SentenceText);
                 }
             }
-            return Json(new { wordId = wordId, nouns = wordViewModel.nouns, sentencesa = wordViewModel.sentences, pronouns = wordViewModel.proNouns });
+            return Json(new { wordId = wordId, translationId = wordViewModel.translationId, translation = wordViewModel.translation, nouns = wordViewModel.nouns, pronounsId = wordViewModel.proNounsId, nounsId = wordViewModel.nounsId, sentencesa = wordViewModel.sentences, pronouns = wordViewModel.proNouns });
            
+
+        }
+
+        public IActionResult UnPublished()
+        {
+            List<Word> allWords = dictContext.Set<Word>().Where(x=>x.IsPublished == false).ToList();
+            List<BanglaWordMapping> banglaWordMappings = dictContext.Set<BanglaWordMapping>().ToList();
+            foreach (var item in banglaWordMappings)
+            {
+                item.banglaWord = dictContext.Set<BanglaWord>().Where(x => x.BanglaWordId == item.BanglaWordId).FirstOrDefault();
+            }
+            foreach (var item in allWords)
+            {
+                item.nouns = dictContext.Set<Noun>().Where(x => x.WordId == item.WordId).ToList();
+                item.proNouns = dictContext.Set<ProNoun>().Where(x => x.WordId == item.WordId).ToList();
+                item.banglaWordMappings = banglaWordMappings.Where(x => x.WordId == item.WordId).ToList();
+            }
+
+            return View(allWords.OrderBy(x => x.text));
+        }
+
+        [HttpGet]
+        [Route("Publish")]
+        public IActionResult Publish([FromQuery(Name = "word")] string wordText)     
+        {
+            
+            dictContext.Set<Word>().Where(x => x.text == wordText).FirstOrDefault().IsPublished = true;
+            dictContext.SaveChanges();
+            return RedirectToAction("Word");
 
         }
 
@@ -231,6 +342,18 @@ namespace DictionaryApp.Controllers
             }
             word.Mark = false;
             dictContext.Set<Word>().Add(word);
+            dictContext.SaveChanges();
+            return RedirectToAction("ManageWord");
+        }
+
+        [HttpPost]
+        public IActionResult AddBanglaWord(BanglaWord word)
+        {
+            if (dictContext.Set<BanglaWord>().ToList().Where(x => x.text == word.text).Any())
+            {
+                return RedirectToAction("ManageWord");
+            }
+            dictContext.Set<BanglaWord>().Add(word);
             dictContext.SaveChanges();
             return RedirectToAction("ManageWord");
         }

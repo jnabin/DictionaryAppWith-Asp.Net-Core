@@ -848,3 +848,4 @@ D:\AspCore\DictionaryApp\DictionaryApp\DictionaryApp\bin\Debug\netcoreapp3.1\tr\
 D:\AspCore\DictionaryApp\DictionaryApp\DictionaryApp\bin\Debug\netcoreapp3.1\zh-Hans\Microsoft.CodeAnalysis.Workspaces.resources.dll
 D:\AspCore\DictionaryApp\DictionaryApp\DictionaryApp\bin\Debug\netcoreapp3.1\zh-Hant\Microsoft.CodeAnalysis.Workspaces.resources.dll
 D:\AspCore\DictionaryApp\DictionaryApp\DictionaryApp\obj\Debug\netcoreapp3.1\Razor\Views\Home\ManageWord.cshtml.g.cs
+D:\AspCore\DictionaryApp\DictionaryApp\DictionaryApp\obj\Debug\netcoreapp3.1\Razor\Views\Home\UnPublished.cshtml.g.cs

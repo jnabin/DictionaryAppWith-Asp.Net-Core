@@ -1,0 +1,110 @@
+﻿@model IEnumerable<DictionaryApp.Models.Word>
+
+@{
+    ViewData["Title"] = "UnPublished";
+    string noun = "";
+    string pro_noun = "";
+    string bangla = "";
+}
+
+<h1>UnPublished List</h1>
+<hr />
+<div class="container word-table">
+    <h4 class="text-secondary">Word List (Total Unpublished Words - <span class="totalWord">@Model.Count()</span>)</h4>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    Word
+                </th>
+                <th>
+                    Translation
+                </th>
+                <th>
+                    Noun
+                </th>
+
+                <th>
+                    Pro-Noun
+                </th>
+
+                <th>
+                    Marked
+                </th>
+                <th>
+                    IsPublished
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+
+            {
+                noun = "";
+                pro_noun = "";
+                bangla = "";
+                string newNoun = "";
+                string newProNoun = "";
+                string newbangla = "";
+                if (item.nouns != null && item.nouns.Count() > 0)
+                {
+                    foreach (var nounItem in item.nouns)
+                    {
+                        noun += nounItem.NounMappingWord.text + ", ";
+                    }
+                    newNoun = noun.Substring(0, noun.Length - 2);
+                }
+                if (item.proNouns != null && item.proNouns.Count() > 0)
+                {
+                    foreach (var proNounItem in item.proNouns)
+                    {
+                        pro_noun += proNounItem.ProNounMappingWord.text + ", ";
+                    }
+                    newProNoun = pro_noun.Substring(0, pro_noun.Length - 2);
+                }
+                if (item.banglaWordMappings != null && item.banglaWordMappings.Count() > 0)
+                {
+                    foreach (var banglaItem in item.banglaWordMappings)
+                    {
+                        bangla += banglaItem.banglaWord.text + ", ";
+                    }
+                    newbangla = bangla.Substring(0, bangla.Length - 2);
+                }
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.text)
+                    </td>
+                    <td>
+                        @newbangla
+                    </td>
+                    <td>
+                        @newNoun
+                    </td>
+                    <td>
+                        @newProNoun
+                    </td>
+
+                    <td>@item.Mark</td>
+
+                    <td>@item.IsPublished</td>
+
+                    <td>
+
+                        <a asp-action="ManageWord" asp-route-word="@item.text">Edit</a> |
+
+                        <a asp-action="Delete" asp-route-id="@item.WordId">Delete</a> |
+                       
+                            <a asp-action="Publish" asp-route-word="@item.text">Publish</a>
+                        
+
+                    </td>
+
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+
+

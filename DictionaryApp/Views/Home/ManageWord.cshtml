@@ -2,6 +2,9 @@
 @{
     ViewData["Title"] = "ManageWord";
     List<Word> words = ViewBag.words;
+    List<BanglaWord> banglaWords = ViewBag.banglaWord;
+    Word word = ViewBag.word;
+
 }
 
 <script src="http://code.jquery.com/jquery.js"></script>
@@ -9,53 +12,187 @@
 <!-- Latest compiled and minified JavaScript -->
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 
-
-<h1>Manage Word</h1>
+<h2>Manage Word</h2>
 <hr />
 <div class="container">
-    
-        <div class="container">
-            <div class="row">
-                <div class="col-4">
-                    <form>
-                        <div class="form-group">
-                            <label for="wordOptions">Select Word</label>
-                            <select class="form-control" id="wordOptions" name="word">
-                                @foreach (var item in words)
+
+    <div class="container">
+        <div class="row">
+            <div class="col-4">
+                <form>
+                    <div class="form-group">
+                        <label for="wordOptions">Select Word</label>
+                        <select class="form-control" id="wordOptions" name="word">
+                            @foreach (var item in words)
+                            {
+                                if (word != null && item.WordId == word.WordId)
+                                {
+                                    <option value="@item.WordId" selected>@item.text</option>
+                                }
+                                else
                                 {
                                     <option value="@item.WordId">@item.text</option>
                                 }
-                            </select>
-                        </div>
-                    </form>
-                </div>
-                <div class="col-6 ml-3">
-                    <form asp-action="AddWord">
-                        
-                        <div class="container">
-                            <div class="row">
-                                <div class="col-8">
-                                    <div class="form-group">
 
-                                        <input class="form-control border-bottom-secondary border-left-0 border-right-0 border-top-0" placeholder="add word" type="text" name="text" id="addWord" required/>
+                            }
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="col-6 ml-3">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-12">
+                            <form asp-action="AddWord">
 
+                                <div class="container">
+                                    <div class="row">
+                                        <div class="col-8">
+                                            <div class="form-group">
+
+                                                <input class="form-control border-bottom-secondary border-left-0 border-right-0 border-top-0" placeholder="add word" type="text" name="text" id="addWord" required />
+
+                                            </div>
+                                        </div>
+                                        <div class="col-3">
+                                            <button type="submit" class="btn btn-primary loadPage">Add</button>
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="col-3">
-                                    <button type="submit" class="btn btn-primary loadPage">Add</button>
-                                </div>
-                            </div>
+
+                            </form>
                         </div>
+                        <div class="col-12">
+                            <form asp-action="AddBanglaWord">
 
-                    </form>
+                                <div class="container">
+                                    <div class="row">
+                                        <div class="col-8">
+                                            <div class="form-group">
+
+                                                <input class="form-control border-bottom-secondary border-left-0 border-right-0 border-top-0" placeholder="add bangla word" type="text" name="text" id="addbanglaWord" required />
+
+                                            </div>
+                                        </div>
+                                        <div class="col-3">
+                                            <button type="submit" class="btn btn-primary loadPage">Add</button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </form>
+                        </div>
+                    </div>
                 </div>
+               
             </div>
+            
         </div>
-
+    </div>
    
+    <div class="container word-details">
+        <div class="row bangla">
+            <p class="text-center">Translation :</p>
+
+            <ul class="bangla-list detail">
+            </ul>
+        </div>
+        <div class="row noun">
+            <p class="text-center">Noun :</p>
+
+            <ul class="noun-list detail">
+            </ul>
+        </div>
+        <div class="row pro-noun">
+            <p class="text-center">Pro-Noun : </p>
+            <ul class="pronoun-list detail">
+            </ul>
+        </div>
+        <div class="row sentence">
+            <p class="text-center">Sentence : </p>
+            <ul class="sentence-list detail">
+            </ul>
+        </div>
+       
+    </div>
+    
+
+
     <div class="container">
         <div class="row">
             <div class="col-5 border border-secondary p-2 m-2 mr-5">
+                <h4 class="text-secondary text-center mb-1">Translation</h4>
+                <form asp-action="AddBaglaMapping">
+                    <input type="hidden" value="" class="hiddeWord" name="hiddeWord" />
+
+                    <div class="form-group">
+                        <label for="banglaTranslation1">First Bangla Translation</label>
+                        <select class="form-control" id="banglaOptions1" name="bangla1">
+                            <option selected value=""> -- select a bangla word -- </option>
+                            @if (banglaWords!=null && banglaWords.Count()>0)
+                            {
+                                @foreach (var item in banglaWords)
+                                {
+
+                                    <option value="@item.BanglaWordId">@item.text</option>
+                                }
+                            }
+
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="banglaOptions2">Second Bangla Translation</label>
+                        <select class="form-control" id="banglaOptions2" name="bangla2">
+                            <option selected value=""> -- select a bangla word -- </option>
+                            @if (banglaWords != null && banglaWords.Count() > 0)
+                            {
+                                @foreach (var item in banglaWords)
+                                {
+
+                                    <option value="@item.BanglaWordId">@item.text</option>
+                                }
+                            }
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="banglaOptions3">Third Bangla Translation</label>
+
+                        <select class="form-control" id="banglaOptions3" name="bangla3">
+                            <option selected value=""> -- select a bangla word -- </option>
+                            @if (banglaWords != null && banglaWords.Count() > 0)
+                            {
+                                @foreach (var item in banglaWords)
+                                {
+
+                                    <option value="@item.BanglaWordId">@item.text</option>
+                                }
+                            }
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="banglaOptions4">Fourth Bangla Translation</label>
+                        <select class="form-control" id="banglaOptions4" name="bangla4">
+                            <option selected value=""> -- select a bangla word -- </option>
+                            @if (banglaWords != null && banglaWords.Count() > 0)
+                            {
+                                @foreach (var item in banglaWords)
+                                {
+
+                                    <option value="@item.BanglaWordId">@item.text</option>
+                                }
+                            }
+                        </select>
+                    </div>
+
+
+                    <button type="submit" class="btn btn-primary loadPage">Submit</button>
+
+                </form>
+            </div>
+            <div class="col-5 border border-secondary p-2 m-2">
                 <h4 class="text-secondary text-center mb-1">Noun</h4>
                 <form asp-action="AddNoun">
                     <input type="hidden" value="" class="hiddeWord" name="hiddeWord" />
@@ -63,9 +200,10 @@
                     <div class="form-group">
                         <label for="nounOptions1">First Noun</label>
                         <select class="form-control" id="nounOptions1" name="Noun1">
-                            <option disabled selected value=""> -- select a noun -- </option>
+                            <option selected value=""> -- select a noun -- </option>
                             @foreach (var item in words)
                             {
+
                                 <option value="@item.WordId">@item.text</option>
                             }
                         </select>
@@ -74,7 +212,7 @@
                     <div class="form-group">
                         <label for="nounOptions2">Second Noun</label>
                         <select class="form-control" id="nounOptions2" name="Noun2">
-                            <option disabled selected value=""> -- select a noun -- </option>
+                            <option selected value=""> -- select a noun -- </option>
                             @foreach (var item in words)
                             {
                                 <option value="@item.WordId">@item.text</option>
@@ -86,7 +224,7 @@
                         <label for="nounOptions3">Third Noun</label>
 
                         <select class="form-control" id="nounOptions3" name="Noun3">
-                            <option disabled selected value=""> -- select a noun -- </option>
+                            <option selected value=""> -- select a noun -- </option>
                             @foreach (var item in words)
                             {
                                 <option value="@item.WordId">@item.text</option>
@@ -97,7 +235,7 @@
                     <div class="form-group">
                         <label for="nounOptions4">Fourth Noun</label>
                         <select class="form-control" id="nounOptions4" name="Noun4">
-                            <option disabled selected value=""> -- select a noun -- </option>
+                            <option selected value=""> -- select a noun -- </option>
                             @foreach (var item in words)
                             {
                                 <option value="@item.WordId">@item.text</option>
@@ -110,7 +248,7 @@
 
                 </form>
             </div>
-            <div class="col-5 border border-secondary p-2 m-2">
+            <div class="col-5 border border-secondary p-2 m-2 mr-5">
                 <h4 class="text-secondary text-center mb-1">Pro-Noun</h4>
                 <form asp-action="AddProNoun">
                     <input type="hidden" value="" class="hiddeWord" name="hiddeWord" />
@@ -119,7 +257,7 @@
                     <div class="form-group">
                         <label for="pronoun1">First ProNoun</label>
                         <select class="form-control" id="pronoun1" name="ProNoun1">
-                            <option disabled selected value=""> -- select a pro-noun -- </option>
+                            <option selected value=""> -- select a pro-noun -- </option>
                             @foreach (var item in words)
                             {
                                 <option value="@item.WordId">@item.text</option>
@@ -130,7 +268,7 @@
                     <div class="form-group">
                         <label for="pronoun2">Second ProNoun</label>
                         <select class="form-control" id="pronoun2" name="ProNoun2">
-                            <option disabled selected value=""> -- select a pro-noun -- </option>
+                            <option selected value=""> -- select a pro-noun -- </option>
                             @foreach (var item in words)
                             {
                                 <option value="@item.WordId">@item.text</option>
@@ -141,7 +279,7 @@
                     <div class="form-group">
                         <label for="pronoun3">Third ProNoun</label>
                         <select class="form-control" id="pronoun3" name="ProNoun3">
-                            <option disabled selected value=""> -- select a pro-noun -- </option>
+                            <option selected value=""> -- select a pro-noun -- </option>
                             @foreach (var item in words)
                             {
                                 <option value="@item.WordId">@item.text</option>
@@ -152,7 +290,7 @@
                     <div class="form-group">
                         <label for="pronoun4">Fourth ProNoun</label>
                         <select class="form-control" id="pronoun4" name="ProNoun4">
-                            <option disabled selected value=""> -- select a pro-noun -- </option>
+                            <option selected value=""> -- select a pro-noun -- </option>
                             @foreach (var item in words)
                             {
                                 <option value="@item.WordId">@item.text</option>
@@ -164,32 +302,33 @@
 
                 </form>
             </div>
-            <div class="col-5 border border-secondary p-2 m-2 mr-5">
+            <div class="col-5 border border-secondary p-2 m-2">
                 <h4 class="text-secondary text-center mb-1">English Sentence</h4>
                 <form asp-action="AddESentence">
-                    <input type="hidden"  value="" class="hiddeWord" name="hiddeWord"/>
+                    <input type="hidden" value="" class="hiddeWord" name="hiddeWord" />
 
                     <div class="form-group">
                         <label for="esentence1">First E-Semntence</label>
-                        <input class="form-control" type="text" id="esentence1" name="ESentence1">
+                        <input class="form-control allSentenceInput" type="text" id="esentence1" name="ESentence1">
+
                     </div>
                     <div class="form-group">
                         <label for="esentence2">Second E-Sentence</label>
-                        <input class="form-control" type="text" id="esentence2" name="ESentence2">
+                        <input class="form-control allSentenceInput" type="text" id="esentence2" name="ESentence2">
                     </div>
                     <div class="form-group">
                         <label for="esentence3">Third E-Sentence</label>
-                        <input class="form-control" type="text" id="esentence3" name="ESentence3">
+                        <input class="form-control allSentenceInput" type="text" id="esentence3" name="ESentence3">
                     </div>
                     <div class="form-group">
                         <label for="esentence4">Fourth E-Sentence</label>
-                        <input class="form-control" type="text" id="esentence4" name="ESentence4">
+                        <input class="form-control allSentenceInput" type="text" id="esentence4" name="ESentence4">
                     </div>
                     <button type="submit" class="btn btn-primary loadPage">Submit</button>
 
                 </form>
             </div>
-            <div class="col-5 border border-secondary p-2 m-2">
+            <div class="col-5 border border-secondary p-2 m-2 mr-5">
                 <h4 class="text-secondary text-center mb-1">Bangla Sentence</h4>
                 <form asp-action="AddBSentence">
                     <input type="hidden" value="" class="hiddeWord" />
@@ -219,7 +358,7 @@
 </div>
 <div id="loader"></div>
 <script>
-   
+
     $(document).ready(function () {
 
         $(".hiddeWord").val($("#wordOptions").val());
@@ -227,13 +366,199 @@
             $(".hiddeWord").val($("#wordOptions").val());
         });
 
+
+
+            var formData = new FormData();
+            formData.append("value", $("#wordOptions option:selected").html());
+            $.ajax({
+                type: "POST",
+                url: '/Home/getWordDetails',
+                data: formData,
+                processData: false,
+                contentType: false
+            }).done(function (response) {
+
+                var nouns = response.nouns;
+
+                var proNouns = response.pronouns;
+                var nounsId = response.nounsId;
+                var proNounsId = response.pronounsId;
+
+                var translation = response.translation;
+                var translationId = response.translationId;
+
+                var sentence = response.sentencesa;
+                $(".detail").empty();
+                var i = 0;
+                var j = 1;
+                var available = false;
+                $.each(translation, function (index, value) {
+                    available = true;
+                    $(".bangla-list").append(`<li class="text-secondary">${value}</li>`);
+                    $(`#banglaOptions${j} option[value="${translationId[i]}"]`).attr("selected", "selected");
+                    i++;
+                    j++;
+                });
+                if (!available) {
+                    $(".bangla-list").empty();
+                    $(".bangla").append(`<p class="text-danger removeb">Not available</p>`);
+                }
+                available = false;
+                i = 0;
+                j = 1;
+                $.each(nouns, function (index, value) {
+                    available = true;
+                    $(".noun-list").append(`<li class="text-secondary">${value}</li>`);
+                    $(`#nounOptions${j} option[value="${nounsId[i]}"]`).attr("selected", "selected");
+                    i++;
+                    j++;
+                });
+                if (!available) {
+                    $(".noun-list").empty();
+                    $(".noun").append(`<p class="text-danger removen">Not available</p>`);
+                }
+                available = false;
+                i = 0;
+                j = 1;
+                $.each(proNouns, function (index, value) {
+                    available = true;
+                    $(".pronoun-list").append(`<li class="text-secondary">${value}</li>`);
+                    $(`#pronoun${j} option[value="${proNounsId[i]}"]`).attr("selected", "selected");
+                    i++;
+                    j++;
+                });
+                if (!available) {
+                    $(".pronoun-list").empty();
+                    $(".pro-noun").append(`<p class="text-danger removep">Not available</p>`);
+
+                }
+                available = false;
+                i = 0;
+                j = 1;
+                $.each(sentence, function (index, value) {
+                    available = true;
+                    $(".sentence-list").append(`<li class="text-secondary">${value}</li>`);
+                    $(`#esentence${j}`).val(value);
+                });
+                if (!available) {
+                    $(".sentence-list").empty();
+                    $(".sentence").append(`<p class="text-danger removes">Not available</p>`);
+
+                }
+                
+            });
+
+
+        $("#wordOptions").on('change', function () {
+           
+            var formData = new FormData();
+            formData.append("value", $("#wordOptions option:selected").html());
+            $.ajax({
+                type: "POST",
+                url: '/Home/getWordDetails',
+                data: formData,
+                processData: false,
+                contentType: false
+            }).done(function (response) {
+                
+                var nouns = response.nouns;
+               
+                var proNouns = response.pronouns;
+                var nounsId = response.nounsId;
+                var proNounsId = response.pronounsId;
+
+                var translation = response.translation;
+                var translationId = response.translationId;
+                var sentence = response.sentencesa;
+                $(".detail").empty();
+                var i = 0;
+                var j = 1;
+                var available = false;
+                $(".removen").remove();
+                $(".removep").remove();
+                $(".removes").remove();
+                $(".removeb").remove();
+                $(".allSentenceInput").val("");
+                $('option:selected', 'select[name="Noun1"]').removeAttr('selected');
+                $('option:selected', 'select[name="Noun2"]').removeAttr('selected');
+                $('option:selected', 'select[name="Noun3"]').removeAttr('selected');
+                $('option:selected', 'select[name="Noun4"]').removeAttr('selected');
+
+                $('option:selected', 'select[name="bangla1"]').removeAttr('selected');
+                $('option:selected', 'select[name="bangla2"]').removeAttr('selected');
+                $('option:selected', 'select[name="bangla3"]').removeAttr('selected');
+                $('option:selected', 'select[name="bangla4"]').removeAttr('selected');
+
+                $('option:selected', 'select[name="ProNoun1"]').removeAttr('selected');
+                $('option:selected', 'select[name="ProNoun2"]').removeAttr('selected');
+                $('option:selected', 'select[name="ProNoun3"]').removeAttr('selected');
+                $('option:selected', 'select[name="ProNoun4"]').removeAttr('selected');
+                $.each(translation, function (index, value) {
+                    available = true;
+                    $(".bangla-list").append(`<li class="text-secondary">${value}</li>`);
+                    $(`#banglaOptions${j} option[value="${translationId[i]}"]`).attr("selected", "selected");
+                    i++;
+                    j++;
+                });
+                if (!available) {
+                    $(".bangla-list").empty();
+                    $(".bangla").append(`<p class="text-danger removeb">Not available</p>`);
+                }
+                available = false;
+                i = 0;
+                j = 1;
+                $.each(nouns, function (index, value) {
+                    available = true;
+                    $(".noun-list").append(`<li class="text-secondary">${value}</li>`);
+                    $(`#nounOptions${j} option[value="${nounsId[i]}"]`).attr("selected", "selected");
+                    i++;
+                    j++;
+                });
+                if (!available) {
+                    $(".noun-list").empty();
+                    $(".removen").remove();
+                    $(".noun").append(`<p class="text-danger removen">Not available</p>`);
+                }
+                available = false;
+                i = 0;
+                j = 1;
+                $.each(proNouns, function (index, value) {
+                    available = true;
+                    $(".pronoun-list").append(`<li class="text-secondary">${value}</li>`);
+                    $(`#pronoun${j} option[value="${proNounsId[i]}"]`).attr("selected", "selected");
+                    i++;
+                    j++;
+                });
+                if (!available) {
+                    $(".pronoun-list").empty();
+                    $(".removep").remove();
+                    $(".pro-noun").append(`<p class="text-danger removep">Not available</p>`);
+
+                }
+                available = false;
+                i = 0;
+                j = 1;
+                $.each(sentence, function (index, value) {
+                    available = true;
+                    $(".sentence-list").append(`<li class="text-secondary">${value}</li>`);
+                    
+                    $(`#esentence${j}`).val(value);
+                });
+                if (!available) {
+                    $(".sentence-list").empty();
+                    $(".removes").remove();
+                    $(".sentence").append(`<p class="text-danger removes">Not available</p>`);
+
+                }
+            });
+        });
     });
     var spinner = $('#loader');
     $(function () {
         $('.loadPage').click(function (e) {
-           
+
             spinner.show();
-           
+
         });
     });
 

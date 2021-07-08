@@ -2,53 +2,20 @@
 using DictionaryApp.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DictionaryApp.Migrations
 {
     [DbContext(typeof(DictContext))]
-    partial class DictContextModelSnapshot : ModelSnapshot
+    [Migration("20210707085725_addingpublished")]
+    partial class addingpublished
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("ProductVersion", "5.0.7");
-
-            modelBuilder.Entity("DictionaryApp.Models.BanglaWord", b =>
-                {
-                    b.Property<int>("BanglaWordId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("text")
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("BanglaWordId");
-
-                    b.ToTable("BanglaWords");
-                });
-
-            modelBuilder.Entity("DictionaryApp.Models.BanglaWordMapping", b =>
-                {
-                    b.Property<int>("BanglaWordMappingId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("BanglaWordId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("WordId")
-                        .HasColumnType("INTEGER");
-
-                    b.HasKey("BanglaWordMappingId");
-
-                    b.HasIndex("BanglaWordId");
-
-                    b.HasIndex("WordId");
-
-                    b.ToTable("BanglaWordMappings");
-                });
 
             modelBuilder.Entity("DictionaryApp.Models.Noun", b =>
                 {
@@ -148,25 +115,6 @@ namespace DictionaryApp.Migrations
                     b.ToTable("WordSentences");
                 });
 
-            modelBuilder.Entity("DictionaryApp.Models.BanglaWordMapping", b =>
-                {
-                    b.HasOne("DictionaryApp.Models.BanglaWord", "banglaWord")
-                        .WithMany("banglaWordMappings")
-                        .HasForeignKey("BanglaWordId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("DictionaryApp.Models.Word", "word")
-                        .WithMany("banglaWordMappings")
-                        .HasForeignKey("WordId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("banglaWord");
-
-                    b.Navigation("word");
-                });
-
             modelBuilder.Entity("DictionaryApp.Models.Noun", b =>
                 {
                     b.HasOne("DictionaryApp.Models.Word", "NounMappingWord")
@@ -224,11 +172,6 @@ namespace DictionaryApp.Migrations
                     b.Navigation("Word");
                 });
 
-            modelBuilder.Entity("DictionaryApp.Models.BanglaWord", b =>
-                {
-                    b.Navigation("banglaWordMappings");
-                });
-
             modelBuilder.Entity("DictionaryApp.Models.Sentence", b =>
                 {
                     b.Navigation("wordSentences");
@@ -236,8 +179,6 @@ namespace DictionaryApp.Migrations
 
             modelBuilder.Entity("DictionaryApp.Models.Word", b =>
                 {
-                    b.Navigation("banglaWordMappings");
-
                     b.Navigation("nounMapping");
 
                     b.Navigation("nouns");

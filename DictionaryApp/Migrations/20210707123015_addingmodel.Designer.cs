@@ -2,14 +2,16 @@
 using DictionaryApp.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DictionaryApp.Migrations
 {
     [DbContext(typeof(DictContext))]
-    partial class DictContextModelSnapshot : ModelSnapshot
+    [Migration("20210707123015_addingmodel")]
+    partial class addingmodel
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,8 +23,8 @@ namespace DictionaryApp.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("text")
-                        .HasColumnType("TEXT");
+                    b.Property<int>("text")
+                        .HasColumnType("INTEGER");
 
                     b.HasKey("BanglaWordId");
 

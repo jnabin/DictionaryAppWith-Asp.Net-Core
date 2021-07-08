@@ -4,6 +4,7 @@
     ViewData["Title"] = "Word";
     string noun = "";
     string pro_noun = "";
+    string bangla = "";
 }
 
 <form id="searchWord">
@@ -27,6 +28,9 @@
                     Word
                 </th>
                 <th>
+                    Translation
+                </th>
+                <th>
                     Noun
                 </th>
 
@@ -37,7 +41,9 @@
                 <th>
                     Marked
                 </th>
-
+                <th>
+                    IsPublished
+                </th>
                 <th></th>
             </tr>
         </thead>
@@ -47,8 +53,10 @@
             {
                 noun = "";
                 pro_noun = "";
+                bangla = "";
                 string newNoun = "";
                 string newProNoun = "";
+                string newbangla = "";
                 if (item.nouns != null && item.nouns.Count() > 0)
                 {
                     foreach (var nounItem in item.nouns)
@@ -65,30 +73,45 @@
                     }
                     newProNoun = pro_noun.Substring(0, pro_noun.Length - 2);
                 }
-                <tr>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.text)
-                    </td>
-                    <td>
-                        @newNoun
-                    </td>
-                    <td>
-                        @newProNoun
-                    </td>
+                if (item.banglaWordMappings != null && item.banglaWordMappings.Count() > 0)
+                {
+                    foreach (var banglaItem in item.banglaWordMappings)
+                    {
+                        bangla += banglaItem.banglaWord.text + ", ";
+                    }
+                    newbangla = bangla.Substring(0, bangla.Length - 2);
+                }
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.text)
+                </td>
+                <td>
+                    @newbangla
+                </td>
+                <td>
+                    @newNoun
+                </td>
+                <td>
+                    @newProNoun
+                </td>
 
-                    <td>@item.Mark</td>
+                <td>@item.Mark</td>
 
-                    <td>
+                <td>@item.IsPublished</td>
 
-                        <a asp-action="Edit" asp-route-id="@item.WordId">Edit</a> |
+                <td>
 
-                        <a asp-action="Details" asp-route-id="@item.WordId">Details</a> |
+                    <a asp-action="ManageWord" asp-route-word="@item.text">Edit</a> |
 
-                        <a asp-action="Delete" asp-route-id="@item.WordId">Delete</a>
+                    <a asp-action="Delete" asp-route-id="@item.WordId">Delete</a> |
+                    @if (!item.IsPublished)
+                    {
+                        <a asp-action="Publish" asp-route-word="@item.text">Publish</a>
+                    }
 
-                    </td>
+                </td>
 
-                </tr>
+            </tr>
             }
         </tbody>
     </table>
@@ -143,9 +166,24 @@
                     var nouns = response.nouns;
                     var proNouns = response.pronouns;
                     var sentence = response.sentencesa;
+                    var translation = response.translation;
 
                     $(".modal-body").append(`<input type="hidden" id="wordId" value="${response.wordId}"/>`);
                     $(".enter-delete-button").append(`<button type="button" onclick="deleteWord()" class="btn btn-secondary removeDel" data-dismiss="modal">Delete</button>`);
+
+
+                    $(".modal-body").append(`<div class="bg-secondary text-light text-center">Translation</div>`);
+
+                    if (translation.length == 0) {
+                        $(".modal-body").append(`<p class="m-2 text-danger">Translation not available</p>`);
+                    } else {
+                        $.each(translation, function (index, value) {
+                            $(".modal-body").append(`<ul class="m-2">`);
+                            $(".modal-body").append(`<li class="text-secondary">${value}</li>`);
+                            $(".modal-body").append(`</ul>`);
+                        })
+                    }
+
 
                     $(".modal-body").append(`<div class="bg-secondary text-light text-center">Noun</div>`);
                    

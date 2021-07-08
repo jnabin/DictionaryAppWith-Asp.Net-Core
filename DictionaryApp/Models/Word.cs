@@ -16,6 +16,8 @@ namespace DictionaryApp.Models
 
         public Boolean Mark { get; set; }
 
+        public Boolean IsPublished { get; set; }
+
         [InverseProperty("word")]
         public List<Noun> nouns { get; set; }
 
@@ -29,5 +31,7 @@ namespace DictionaryApp.Models
         public List<ProNoun> proNounMapping { get; set; }
 
         public  virtual List<WordSentence> wordSentences { get; set; }
+
+        public List<BanglaWordMapping> banglaWordMappings { get; set; }
     }
 }

@@ -15,6 +15,9 @@ namespace DictionaryApp.Models
 
         public DbSet<WordSentence> WordSentences { get; set; }
 
+        public DbSet<BanglaWord> BanglaWords { get; set; }
+        public DbSet<BanglaWordMapping> BanglaWordMappings { get; set; }
+
         protected override void OnConfiguring(DbContextOptionsBuilder options)
             => options.UseSqlite(@"Data Source=D:\AspCore\dictionary.sqlite");
 

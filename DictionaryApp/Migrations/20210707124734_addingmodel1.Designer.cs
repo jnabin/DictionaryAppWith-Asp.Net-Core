@@ -2,14 +2,16 @@
 using DictionaryApp.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DictionaryApp.Migrations
 {
     [DbContext(typeof(DictContext))]
-    partial class DictContextModelSnapshot : ModelSnapshot
+    [Migration("20210707124734_addingmodel1")]
+    partial class addingmodel1
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
